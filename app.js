@@ -264,16 +264,19 @@ class AppStore {
   }
 
   save() {
-    try {
-      localStorage.setItem('billkraft_state_v2', JSON.stringify(this.state));
-    } catch (e) {
-      console.error('State save error:', e);
-    }
+    if (this._saveTimer) clearTimeout(this._saveTimer);
+    this._saveTimer = setTimeout(() => {
+      try {
+        localStorage.setItem('billkraft_state_v2', JSON.stringify(this.state));
+      } catch (e) {
+        console.error('State save error:', e);
+      }
+    }, 150);
   }
 
   reset() {
     this.state = JSON.parse(JSON.stringify(defaultState));
-    this.save();
+    localStorage.setItem('billkraft_state_v2', JSON.stringify(this.state));
   }
 }
 
@@ -1621,7 +1624,19 @@ window.toggleTheme = () => {
 // RENDER VIEWS
 // ==========================================================================
 
+// High-Performance 60FPS Render Scheduler
+let renderScheduled = false;
+
 function renderApp() {
+  if (renderScheduled) return;
+  renderScheduled = true;
+  requestAnimationFrame(() => {
+    renderScheduled = false;
+    executeRenderApp();
+  });
+}
+
+function executeRenderApp() {
   document.documentElement.setAttribute('data-theme', store.state.theme || 'light');
   window.closeModal();
 
