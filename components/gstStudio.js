@@ -78,7 +78,7 @@ function renderGstTabContent(tab, data) {
 
   if (tab === 'gstr1') {
     return `
-      <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
+      <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-label">B2B Taxable Value</div>
           <div class="stat-value">${formatINR(data.totalTaxable)}</div>

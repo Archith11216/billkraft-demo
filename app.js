@@ -1961,8 +1961,8 @@ function executeRenderApp() {
     const convertedCount = store.state.estimates.filter(e => e.status === 'Converted').length;
 
     container.innerHTML = `
-      <!-- Top Estimates Metrics -->
-      <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
+      <!-- Top Estimates Metrics (Uniform Small Compact Size) -->
+      <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-header">
             <span class="stat-label">Total Quotation Value</span>
@@ -1991,17 +1991,17 @@ function executeRenderApp() {
         </div>
       </div>
 
-      <div class="gst-studio-card" style="padding: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div class="gst-studio-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
           <div>
-            <h3 style="font-family: var(--font-main);">Proforma Estimates & Quotations</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Manage sales quotes, send estimates to clients, and convert to Sales Invoice in 1-click</p>
+            <h3 style="font-family: var(--font-main); font-size: 0.95rem;">Proforma Estimates & Quotations</h3>
+            <p style="font-size: 0.725rem; color: var(--text-muted);">Manage sales quotes, send estimates to clients, and convert to Sales Invoice in 1-click</p>
           </div>
-          <button class="btn btn-primary" onclick="window.openCreateEstimateModal()">+ Create New Estimate</button>
+          <button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.725rem;" onclick="window.openCreateEstimateModal()">+ Create New Estimate</button>
         </div>
 
         <div class="table-responsive">
-          <table class="data-table">
+          <table class="data-table" style="font-size: 0.775rem;">
             <thead>
               <tr>
                 <th>Estimate No</th>
@@ -2055,8 +2055,8 @@ function executeRenderApp() {
     const totalItcClaimable = store.state.purchases.reduce((acc, p) => acc + Number((p.cgst || 0) + (p.sgst || 0) + (p.igst || 0)), 0);
 
     container.innerHTML = `
-      <!-- Top Purchase Metrics -->
-      <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
+      <!-- Top Purchase Metrics (Uniform Small Compact Size) -->
+      <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-header">
             <span class="stat-label">Total Inward Purchases</span>
@@ -2085,17 +2085,17 @@ function executeRenderApp() {
         </div>
       </div>
 
-      <div class="gst-studio-card" style="padding: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div class="gst-studio-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
           <div>
-            <h3 style="font-family: var(--font-display);">Purchases & Inward Bills Directory</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Manage vendor invoices and input GST claims</p>
+            <h3 style="font-family: var(--font-main); font-size: 0.95rem;">Purchases & Inward Bills Directory</h3>
+            <p style="font-size: 0.725rem; color: var(--text-muted);">Manage vendor invoices and input GST claims</p>
           </div>
-          <button class="btn btn-primary" onclick="window.openCreatePurchaseModal()">+ Record Purchase Bill</button>
+          <button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.725rem;" onclick="window.openCreatePurchaseModal()">+ Record Purchase Bill</button>
         </div>
 
         <div class="table-responsive">
-          <table class="data-table">
+          <table class="data-table" style="font-size: 0.775rem;">
             <thead>
               <tr>
                 <th>Bill No</th>
@@ -2142,8 +2142,8 @@ function executeRenderApp() {
     const totalOrderVal = store.state.orders.reduce((acc, o) => acc + Number(o.grandTotal || 0), 0);
 
     container.innerHTML = `
-      <!-- Top Order Metrics -->
-      <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
+      <!-- Top Order Metrics (Uniform Small Compact Size) -->
+      <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-header">
             <span class="stat-label">Sales Orders (SO)</span>
@@ -2172,20 +2172,20 @@ function executeRenderApp() {
         </div>
       </div>
 
-      <div class="gst-studio-card" style="padding: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div class="gst-studio-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
           <div>
-            <h3 style="font-family: var(--font-display);">Orders Directory</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Manage sales orders (customer) and purchase orders (vendor procurement)</p>
+            <h3 style="font-family: var(--font-main); font-size: 0.95rem;">Orders Directory</h3>
+            <p style="font-size: 0.725rem; color: var(--text-muted);">Manage sales orders (customer) and purchase orders (vendor procurement)</p>
           </div>
-          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <button class="btn btn-emerald" onclick="window.openCreateOrderModal('Purchase Order')">📦 + Create Purchase Order (PO)</button>
-            <button class="btn btn-primary" onclick="window.openCreateOrderModal('Sales Order')">📋 + Create Sales Order (SO)</button>
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            <button class="btn btn-emerald" style="padding: 0.25rem 0.5rem; font-size: 0.725rem;" onclick="window.openCreateOrderModal('Purchase Order')">📦 + Create Purchase Order (PO)</button>
+            <button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.725rem;" onclick="window.openCreateOrderModal('Sales Order')">📋 + Create Sales Order (SO)</button>
           </div>
         </div>
 
         <div class="table-responsive">
-          <table class="data-table">
+          <table class="data-table" style="font-size: 0.775rem;">
             <thead>
               <tr>
                 <th>Order No</th>
@@ -2224,13 +2224,13 @@ function executeRenderApp() {
     titleEl.innerText = 'Stock & Inventory';
     subEl.innerText = 'Track product stock, HSN codes, and pricing';
     container.innerHTML = `
-      <div class="gst-studio-card" style="padding: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-          <h3 style="font-family: var(--font-display);">Product & Stock Directory</h3>
-          <button class="btn btn-emerald" onclick="window.openAddProductModal()">+ Add New Product</button>
+      <div class="gst-studio-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
+          <h3 style="font-family: var(--font-main); font-size: 0.95rem;">Product & Stock Directory</h3>
+          <button class="btn btn-emerald" style="padding: 0.25rem 0.5rem; font-size: 0.725rem;" onclick="window.openAddProductModal()">+ Add New Product</button>
         </div>
         <div class="table-responsive">
-          <table class="data-table">
+          <table class="data-table" style="font-size: 0.775rem;">
             <thead>
               <tr>
                 <th>Item Name</th>
@@ -2271,13 +2271,13 @@ function executeRenderApp() {
     titleEl.innerText = 'Customers & Parties';
     subEl.innerText = 'Manage customer & vendor GSTIN directories';
     container.innerHTML = `
-      <div class="gst-studio-card" style="padding: 1.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-          <h3 style="font-family: var(--font-display);">Parties Directory</h3>
-          <button class="btn btn-primary" onclick="window.openAddPartyModal()">+ Add New Party</button>
+      <div class="gst-studio-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
+          <h3 style="font-family: var(--font-main); font-size: 0.95rem;">Parties Directory</h3>
+          <button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.725rem;" onclick="window.openAddPartyModal()">+ Add New Party</button>
         </div>
         <div class="table-responsive">
-          <table class="data-table">
+          <table class="data-table" style="font-size: 0.775rem;">
             <thead>
               <tr>
                 <th>Party Name</th>
@@ -2317,8 +2317,8 @@ function executeRenderApp() {
     const totalCargoVal = store.state.ewayBills.reduce((acc, e) => acc + Number(e.grandTotal || 0), 0);
 
     container.innerHTML = `
-      <!-- Top E-Way Metrics Row -->
-      <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
+      <!-- Top E-Way Metrics Row (Uniform Small Compact Size) -->
+      <div class="stats-grid">
         <div class="stat-card emerald">
           <div class="stat-header">
             <span class="stat-label">Active E-Way Bills</span>
