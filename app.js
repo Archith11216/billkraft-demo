@@ -726,7 +726,7 @@ window.viewInvoiceLetter = (invoiceId) => {
       <h3 class="modal-title" style="font-size: 1.05rem;">📄 Tax Invoice Letter — ${inv.invoiceNumber}</h3>
       <div style="display: flex; gap: 0.5rem; align-items: center;">
         <button class="btn btn-primary" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="window.openCreateEwayModal('${inv.id}')">🚛 Generate E-Way Bill</button>
-        <button class="btn btn-emerald" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="window.printInvoice('${inv.id}')">🖨️ Print / Download PDF</button>
+        <button class="btn btn-emerald" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;" onclick="window.printInvoice('${inv.id}')">Print / Download PDF</button>
         <button class="btn btn-icon" onclick="window.closeModal()">✕</button>
       </div>
     </div>
@@ -983,7 +983,7 @@ window.viewEwaySlip = (ewayId) => {
     <div class="modal-header">
       <h3 class="modal-title">🚛 E-Way Bill Slip — ${ewb.ewbNo}</h3>
       <div style="display: flex; gap: 0.5rem; align-items: center;">
-        <button class="btn btn-emerald" onclick="window.printEwaySlip('${ewb.id}')">🖨️ Print E-Way Bill</button>
+        <button class="btn btn-emerald" onclick="window.printEwaySlip('${ewb.id}')">Print E-Way Bill</button>
         <button class="btn btn-icon" onclick="window.closeModal()">✕</button>
       </div>
     </div>
@@ -1865,7 +1865,7 @@ function renderApp() {
                   <td style="padding: 0.35rem 0.5rem;" onclick="event.stopPropagation()">
                     <div style="display: flex; gap: 0.25rem; align-items: center; white-space: nowrap;">
                       <button class="btn btn-primary" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.viewInvoiceLetter('${inv.id}')">View</button>
-                      <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.printInvoice('${inv.id}')">🖨️ Print</button>
+                      <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.printInvoice('${inv.id}')">Print</button>
                     </div>
                   </td>
                 </tr>
@@ -1970,7 +1970,7 @@ function renderApp() {
                   <td onclick="event.stopPropagation()">
                     <div style="display: flex; gap: 0.25rem; align-items: center; white-space: nowrap;">
                       <button class="btn btn-primary" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.viewInvoiceLetter('${inv.id}')">View</button>
-                      <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.printInvoice('${inv.id}')">🖨️ Print</button>
+                      <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.printInvoice('${inv.id}')">Print</button>
                       <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem; color: var(--rose); border-color: var(--rose);" onclick="window.deleteInvoice('${inv.id}')">🗑️ Delete</button>
                     </div>
                   </td>
@@ -2076,7 +2076,7 @@ function renderApp() {
                         <button class="btn btn-emerald" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.convertEstimateToInvoice('${est.id}')" title="Convert quote to Sales Tax Invoice">⚡ Convert</button>
                       ` : ''}
                       <button class="btn btn-primary" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.viewEstimateLetter('${est.id}')">View</button>
-                      <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.printEstimate('${est.id}')">🖨️ Print</button>
+                      <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.printEstimate('${est.id}')">Print</button>
                       <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem; color: var(--rose); border-color: var(--rose);" onclick="window.deleteEstimate('${est.id}')">🗑️ Delete</button>
                     </div>
                   </td>
@@ -2984,7 +2984,7 @@ window.viewEstimateLetter = (estimateId) => {
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="window.closeModal()">Close</button>
-      <button class="btn btn-primary" onclick="window.printEstimate('${est.id}')">🖨️ Print Quote</button>
+      <button class="btn btn-primary" onclick="window.printEstimate('${est.id}')">Print Quote</button>
     </div>
   `;
   backdrop.classList.add('active');
