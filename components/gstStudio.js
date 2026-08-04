@@ -74,7 +74,7 @@ export function renderGstStudio(activeTab = 'gstr1', storeData) {
 }
 
 function renderGstTabContent(tab, data) {
-  const formatINR = (val) => '₹' + Number(val || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+  const formatINR = (val) => '₹' + Number(val || 0).toLocaleString('en-IN');
 
   if (tab === 'gstr1') {
     return `
