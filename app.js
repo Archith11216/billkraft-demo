@@ -1624,21 +1624,8 @@ window.toggleTheme = () => {
 // RENDER VIEWS
 // ==========================================================================
 
-// High-Performance 60FPS Render Scheduler
-let renderScheduled = false;
-
 function renderApp() {
-  if (renderScheduled) return;
-  renderScheduled = true;
-  requestAnimationFrame(() => {
-    renderScheduled = false;
-    executeRenderApp();
-  });
-}
-
-function executeRenderApp() {
   document.documentElement.setAttribute('data-theme', store.state.theme || 'light');
-  window.closeModal();
 
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   const activeNav = document.getElementById('nav-' + store.state.activeView);
