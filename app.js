@@ -1695,6 +1695,23 @@ function executeRenderApp() {
       .filter(inv => inv.date && inv.date.startsWith(currentYearStr))
       .reduce((a, b) => a + Number(b.grandTotal || 0), 0);
 
+    // Real Purchases Time Breakdowns
+    const todayPurchases = store.state.purchases
+      .filter(p => p.date === todayStr)
+      .reduce((a, b) => a + Number(b.grandTotal || 0), 0);
+
+    const thisWeekPurchases = store.state.purchases
+      .filter(p => p.date && p.date >= mondayStr && p.date <= todayStr)
+      .reduce((a, b) => a + Number(b.grandTotal || 0), 0);
+
+    const thisMonthPurchases = store.state.purchases
+      .filter(p => p.date && p.date.startsWith(currentMonthStr))
+      .reduce((a, b) => a + Number(b.grandTotal || 0), 0);
+
+    const thisYearPurchases = store.state.purchases
+      .filter(p => p.date && p.date.startsWith(currentYearStr))
+      .reduce((a, b) => a + Number(b.grandTotal || 0), 0);
+
     const totalSales = store.state.invoices.reduce((a, b) => a + Number(b.grandTotal || 0), 0);
     const totalPurchases = store.state.purchases.reduce((a, b) => a + Number(b.grandTotal || 0), 0);
 
@@ -1715,6 +1732,24 @@ function executeRenderApp() {
       displayedSalesVal = thisYearSales;
       periodTrendLabel = '📈 Annual Fiscal Total';
     }
+
+    const purchasesFilter = store.state.purchasesPeriodFilter || 'all';
+    let displayedPurchasesVal = totalPurchases;
+    let purchasesTrendLabel = 'Inward Procurement';
+
+    if (purchasesFilter === 'today') {
+      displayedPurchasesVal = todayPurchases;
+      purchasesTrendLabel = `📅 Today's Purchases (${todayStr})`;
+    } else if (purchasesFilter === 'week') {
+      displayedPurchasesVal = thisWeekPurchases;
+      purchasesTrendLabel = '🗓️ Weekly Purchases Total';
+    } else if (purchasesFilter === 'month') {
+      displayedPurchasesVal = thisMonthPurchases;
+      purchasesTrendLabel = '📆 Current Month Purchases';
+    } else if (purchasesFilter === 'year') {
+      displayedPurchasesVal = thisYearPurchases;
+      purchasesTrendLabel = '📈 Annual Purchases Total';
+    }
     
     // Amount Receivable: Invoices that are Unpaid / Pending or 15% estimated receivables
     const amountReceivable = store.state.invoices.filter(i => i.status && i.status.includes('Pending')).reduce((a, b) => a + Number(b.grandTotal || 0), 0) || Math.round(totalSales * 0.15);
@@ -1725,13 +1760,13 @@ function executeRenderApp() {
     const lowStockItems = store.state.products.filter(p => Number(p.stock || 0) < 10);
 
     container.innerHTML = `
-      <!-- Top Financial Metrics Grid (Slim Box Size) -->
-      <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.85rem; margin-bottom: 1.25rem;">
+      <!-- Top Financial Metrics Grid (Small Compact Size) -->
+      <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem;">
         
-        <div class="stat-card" style="padding: 0.75rem 1rem; gap: 0.25rem;">
-          <div class="stat-header" style="display: flex; justify-content: space-between; align-items: center; gap: 0.35rem;">
-            <span class="stat-label" style="font-size: 0.75rem;">Total Sales Revenue</span>
-            <select class="form-select" onchange="window.filterSalesRevenuePeriod(this.value)" style="width: auto; padding: 0.1rem 0.35rem; font-size: 0.725rem; font-weight: 700; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--primary);">
+        <div class="stat-card" style="padding: 0.5rem 0.75rem; gap: 0.2rem;">
+          <div class="stat-header" style="display: flex; justify-content: space-between; align-items: center; gap: 0.25rem;">
+            <span class="stat-label" style="font-size: 0.65rem;">Total Sales Revenue</span>
+            <select class="form-select" onchange="window.filterSalesRevenuePeriod(this.value)" style="width: auto; padding: 0.05rem 0.25rem; font-size: 0.65rem; font-weight: 700; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--primary);">
               <option value="all" ${salesFilter === 'all' ? 'selected' : ''}>All Time</option>
               <option value="today" ${salesFilter === 'today' ? 'selected' : ''}>Today</option>
               <option value="week" ${salesFilter === 'week' ? 'selected' : ''}>This Week</option>
@@ -1739,62 +1774,68 @@ function executeRenderApp() {
               <option value="year" ${salesFilter === 'year' ? 'selected' : ''}>This Year</option>
             </select>
           </div>
-          <div class="stat-value" style="font-size: 1.4rem; margin-top: 0.15rem;">₹${fmt(displayedSalesVal)}</div>
-          <div class="stat-trend trend-up" style="font-size: 0.725rem;">${periodTrendLabel}</div>
+          <div class="stat-value" style="font-size: 1.1rem; margin-top: 0.1rem;">₹${fmt(displayedSalesVal)}</div>
+          <div class="stat-trend trend-up" style="font-size: 0.65rem;">${periodTrendLabel}</div>
         </div>
 
-        <div class="stat-card emerald" style="padding: 0.75rem 1rem; gap: 0.25rem;">
-          <div class="stat-header">
-            <span class="stat-label" style="font-size: 0.75rem;">Total Purchases</span>
-            <div class="stat-icon" style="width: 28px; height: 28px; font-size: 0.85rem;">🛍️</div>
+        <div class="stat-card emerald" style="padding: 0.5rem 0.75rem; gap: 0.2rem;">
+          <div class="stat-header" style="display: flex; justify-content: space-between; align-items: center; gap: 0.25rem;">
+            <span class="stat-label" style="font-size: 0.65rem;">Total Purchases</span>
+            <select class="form-select" onchange="window.filterPurchasesPeriod(this.value)" style="width: auto; padding: 0.05rem 0.25rem; font-size: 0.65rem; font-weight: 700; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-surface); color: var(--emerald);">
+              <option value="all" ${purchasesFilter === 'all' ? 'selected' : ''}>All Time</option>
+              <option value="today" ${purchasesFilter === 'today' ? 'selected' : ''}>Today</option>
+              <option value="week" ${purchasesFilter === 'week' ? 'selected' : ''}>This Week</option>
+              <option value="month" ${purchasesFilter === 'month' ? 'selected' : ''}>This Month</option>
+              <option value="year" ${purchasesFilter === 'year' ? 'selected' : ''}>This Year</option>
+            </select>
           </div>
-          <div class="stat-value" style="font-size: 1.4rem; margin-top: 0.15rem;">₹${fmt(totalPurchases)}</div>
-          <div class="stat-trend trend-up" style="font-size: 0.725rem;">Inward Procurement</div>
+          <div class="stat-value" style="font-size: 1.1rem; margin-top: 0.1rem;">₹${fmt(displayedPurchasesVal)}</div>
+          <div class="stat-trend trend-up" style="font-size: 0.65rem;">${purchasesTrendLabel}</div>
         </div>
 
-        <div class="stat-card amber" style="padding: 0.75rem 1rem; gap: 0.25rem;">
+        <div class="stat-card amber" style="padding: 0.5rem 0.75rem; gap: 0.2rem;">
           <div class="stat-header">
-            <span class="stat-label" style="font-size: 0.75rem;">Amount Receivable</span>
-            <div class="stat-icon" style="width: 28px; height: 28px; font-size: 0.85rem;">📥</div>
+            <span class="stat-label" style="font-size: 0.65rem;">Amount Receivable</span>
+            <div class="stat-icon" style="width: 22px; height: 22px; font-size: 0.75rem;">📥</div>
           </div>
-          <div class="stat-value" style="font-size: 1.4rem; margin-top: 0.15rem;">₹${fmt(amountReceivable)}</div>
-          <div class="stat-trend trend-up" style="font-size: 0.725rem;">From Customers</div>
+          <div class="stat-value" style="font-size: 1.1rem; margin-top: 0.1rem;">₹${fmt(amountReceivable)}</div>
+          <div class="stat-trend trend-up" style="font-size: 0.65rem;">From Customers</div>
         </div>
 
-        <div class="stat-card rose" style="padding: 0.75rem 1rem; gap: 0.25rem;">
+        <div class="stat-card rose" style="padding: 0.5rem 0.75rem; gap: 0.2rem;">
           <div class="stat-header">
-            <span class="stat-label" style="font-size: 0.75rem;">Amount Payable</span>
-            <div class="stat-icon" style="width: 28px; height: 28px; font-size: 0.85rem;">📤</div>
+            <span class="stat-label" style="font-size: 0.65rem;">Amount Payable</span>
+            <div class="stat-icon" style="width: 22px; height: 22px; font-size: 0.75rem;">📤</div>
           </div>
-          <div class="stat-value" style="font-size: 1.4rem; margin-top: 0.15rem;">₹${fmt(amountPayable)}</div>
-          <div class="stat-trend trend-down" style="font-size: 0.725rem;">To Suppliers</div>
+          <div class="stat-value" style="font-size: 1.1rem; margin-top: 0.1rem;">₹${fmt(amountPayable)}</div>
+          <div class="stat-trend trend-down" style="font-size: 0.65rem;">To Suppliers</div>
         </div>
 
-        <div class="stat-card" style="padding: 0.75rem 1rem; gap: 0.25rem;">
+        <div class="stat-card" style="padding: 0.5rem 0.75rem; gap: 0.2rem;">
           <div class="stat-header">
-            <span class="stat-label" style="font-size: 0.75rem;">Low Stock Warning</span>
-            <div class="stat-icon" style="width: 28px; height: 28px; font-size: 0.85rem;">⚠️</div>
+            <span class="stat-label" style="font-size: 0.65rem;">Low Stock Warning</span>
+            <div class="stat-icon" style="width: 22px; height: 22px; font-size: 0.75rem;">⚠️</div>
           </div>
-          <div class="stat-value" style="font-size: 1.4rem; margin-top: 0.15rem;">${lowStockItems.length} Items</div>
-          <div class="stat-trend trend-down" style="font-size: 0.725rem;">Needs Reorder</div>
+          <div class="stat-value" style="font-size: 1.1rem; margin-top: 0.1rem;">${lowStockItems.length} Items</div>
+          <div class="stat-trend trend-down" style="font-size: 0.65rem;">Needs Reorder</div>
         </div>
 
       </div>
 
-      <!-- Low Stock Warning Notification Banner (Slim Box Size) -->
+      <!-- Low Stock Warning Notification Banner (Micro Compact) -->
       ${lowStockItems.length ? `
-        <div style="background: rgba(244, 63, 94, 0.08); border: 1px solid var(--rose); border-radius: var(--radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem;">
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-            <div style="display: flex; align-items: center; gap: 0.4rem; color: var(--rose); font-weight: 700; font-size: 0.85rem; font-family: var(--font-main);">
+        <div style="background: rgba(244, 63, 94, 0.08); border: 1px solid var(--rose); border-radius: var(--radius-md); padding: 0.4rem 0.75rem; margin-bottom: 0.75rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.35rem;">
+            <div style="display: flex; align-items: center; gap: 0.3rem; color: var(--rose); font-weight: 700; font-size: 0.775rem; font-family: var(--font-main);">
               <span>⚠️</span> LOW STOCK NOTIFICATION (${lowStockItems.length} Critical Items)
             </div>
-            <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="window.navigate('inventory')">View Inventory</button>
+            <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.navigate('inventory')">View Inventory</button>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 0.5rem;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.4rem;">
             ${lowStockItems.map(p => `
-              <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.4rem 0.65rem; border-radius: var(--radius-sm); font-size: 0.8rem;">
+              <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.725rem;">
                 <div style="font-weight: 700;">${p.name}</div>
-                <div style="color: var(--rose); font-weight: 800; font-size: 0.85rem; margin-top: 0.1rem;">Stock: ${p.stock} ${p.unit}</div>
+                <div style="color: var(--rose); font-weight: 800; font-size: 0.775rem; margin-top: 0.05rem;">Stock: ${p.stock} ${p.unit}</div>
               </div>
             `).join('')}
           </div>
@@ -1802,42 +1843,42 @@ function executeRenderApp() {
       ` : ''}
 
       <!-- Dashboard Recent Activity & Quick Action Card -->
-      <div class="gst-studio-card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+      <div class="gst-studio-card" style="padding: 0.75rem 1rem; border-radius: var(--radius-md);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
           <div>
-            <h3 style="font-family: var(--font-main); font-size: 1.2rem;">Recent Invoices & Transactions</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted);">Overview of latest generated sales invoices</p>
+            <h3 style="font-family: var(--font-main); font-size: 0.95rem;">Recent Invoices & Transactions</h3>
+            <p style="font-size: 0.725rem; color: var(--text-muted);">Overview of latest generated sales invoices</p>
           </div>
-          <div style="display: flex; gap: 0.5rem;">
-            <button class="btn btn-outline" style="padding: 0.35rem 0.85rem; font-size: 0.85rem;" onclick="window.navigate('gst')">📜 GST Studio</button>
-            <button class="btn btn-primary" style="padding: 0.35rem 0.85rem; font-size: 0.85rem;" onclick="window.openCreateInvoiceModal()">+ New Invoice</button>
+          <div style="display: flex; gap: 0.4rem;">
+            <button class="btn btn-outline" style="padding: 0.25rem 0.5rem; font-size: 0.725rem;" onclick="window.navigate('gst')">📜 GST Studio</button>
+            <button class="btn btn-primary" style="padding: 0.25rem 0.5rem; font-size: 0.725rem;" onclick="window.openCreateInvoiceModal()">+ New Invoice</button>
           </div>
         </div>
 
         <div class="table-responsive">
-          <table class="data-table" style="font-size: 0.875rem;">
+          <table class="data-table" style="font-size: 0.775rem;">
             <thead>
               <tr>
-                <th style="padding: 0.75rem 1rem;">Invoice No</th>
-                <th style="padding: 0.75rem 1rem;">Date</th>
-                <th style="padding: 0.75rem 1rem;">Party Name</th>
-                <th style="padding: 0.75rem 1rem;">Grand Total</th>
-                <th style="padding: 0.75rem 1rem;">Status</th>
-                <th style="padding: 0.75rem 1rem;">Action</th>
+                <th style="padding: 0.35rem 0.5rem;">Invoice No</th>
+                <th style="padding: 0.35rem 0.5rem;">Date</th>
+                <th style="padding: 0.35rem 0.5rem;">Party Name</th>
+                <th style="padding: 0.35rem 0.5rem;">Grand Total</th>
+                <th style="padding: 0.35rem 0.5rem;">Status</th>
+                <th style="padding: 0.35rem 0.5rem;">Action</th>
               </tr>
             </thead>
             <tbody>
               ${store.state.invoices.slice(0, 5).map(inv => `
                 <tr class="invoice-row" ondblclick="window.viewInvoiceLetter('${inv.id}')" ontouchstart="window.handleRowTouch('${inv.id}')" title="Double click to open Tax Invoice Letter">
-                  <td style="padding: 0.75rem 1rem;"><strong>${inv.invoiceNumber}</strong></td>
-                  <td style="padding: 0.75rem 1rem;">${inv.date}</td>
-                  <td style="padding: 0.75rem 1rem;">${inv.partyName}</td>
-                  <td style="padding: 0.75rem 1rem;"><strong>₹${fmt(inv.grandTotal)}</strong></td>
-                  <td style="padding: 0.75rem 1rem;"><span class="badge badge-success" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">${inv.status}</span></td>
-                  <td style="padding: 0.75rem 1rem;" onclick="event.stopPropagation()">
-                    <div style="display: flex; gap: 0.35rem; align-items: center; white-space: nowrap;">
-                      <button class="btn btn-primary" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.viewInvoiceLetter('${inv.id}')">👁️ Letter</button>
-                      <button class="btn btn-outline" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.printInvoice('${inv.id}')">🖨️ Print</button>
+                  <td style="padding: 0.35rem 0.5rem;"><strong>${inv.invoiceNumber}</strong></td>
+                  <td style="padding: 0.35rem 0.5rem;">${inv.date}</td>
+                  <td style="padding: 0.35rem 0.5rem;">${inv.partyName}</td>
+                  <td style="padding: 0.35rem 0.5rem;"><strong>₹${fmt(inv.grandTotal)}</strong></td>
+                  <td style="padding: 0.35rem 0.5rem;"><span class="badge badge-success" style="font-size: 0.65rem; padding: 0.1rem 0.4rem;">${inv.status}</span></td>
+                  <td style="padding: 0.35rem 0.5rem;" onclick="event.stopPropagation()">
+                    <div style="display: flex; gap: 0.25rem; align-items: center; white-space: nowrap;">
+                      <button class="btn btn-primary" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.viewInvoiceLetter('${inv.id}')">View</button>
+                      <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.printInvoice('${inv.id}')">🖨️ Print</button>
                     </div>
                   </td>
                 </tr>
@@ -1896,7 +1937,7 @@ function executeRenderApp() {
                   <td><span class="badge badge-success">${inv.status}</span></td>
                   <td onclick="event.stopPropagation()">
                     <div style="display: flex; gap: 0.35rem; align-items: center; white-space: nowrap;">
-                      <button class="btn btn-primary" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.viewInvoiceLetter('${inv.id}')">👁️ View Letter</button>
+                      <button class="btn btn-primary" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.viewInvoiceLetter('${inv.id}')">View</button>
                       <button class="btn btn-outline" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.printInvoice('${inv.id}')">🖨️ Print</button>
                       <button class="btn btn-outline" style="padding: 0.25rem 0.65rem; font-size: 0.75rem; color: var(--rose); border-color: var(--rose);" onclick="window.deleteInvoice('${inv.id}')">🗑️ Delete</button>
                     </div>
@@ -1992,7 +2033,7 @@ function executeRenderApp() {
                       ${est.status !== 'Converted' ? `
                         <button class="btn btn-emerald" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.convertEstimateToInvoice('${est.id}')" title="Convert quote to Sales Tax Invoice">⚡ Convert to Invoice</button>
                       ` : ''}
-                      <button class="btn btn-primary" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.viewEstimateLetter('${est.id}')">👁️ View Quote</button>
+                      <button class="btn btn-primary" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.viewEstimateLetter('${est.id}')">View</button>
                       <button class="btn btn-outline" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.printEstimate('${est.id}')">🖨️ Print</button>
                       <button class="btn btn-outline" style="padding: 0.25rem 0.65rem; font-size: 0.75rem; color: var(--rose); border-color: var(--rose);" onclick="window.deleteEstimate('${est.id}')">🗑️ Delete</button>
                     </div>

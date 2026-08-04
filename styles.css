@@ -345,7 +345,7 @@ a {
 
 .page-title {
   font-family: var(--font-main);
-  font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-main);
   line-height: 1.2;
@@ -355,7 +355,7 @@ a {
 }
 
 .page-subtitle {
-  font-size: clamp(0.75rem, 1.1vw, 0.875rem);
+  font-size: 0.75rem;
   color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
