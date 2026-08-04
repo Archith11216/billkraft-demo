@@ -2552,10 +2552,10 @@ function renderApp() {
                   <td>${ewb.distance} KM</td>
                   <td><strong style="color: var(--rose);">${ewb.validUntil.split(' ')[0]}</strong></td>
                   <td><span class="badge badge-success">${ewb.status}</span></td>
-                  <td style="display: flex; gap: 0.35rem; align-items: center;" onclick="event.stopPropagation()">
-                    <button class="btn btn-primary" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.viewEwaySlip('${ewb.id}')">👁️ View Slip</button>
-                    <button class="btn btn-outline" style="padding: 0.25rem 0.65rem; font-size: 0.75rem;" onclick="window.printEwaySlip('${ewb.id}')">🖨️ Print</button>
-                    <button class="btn btn-outline" style="padding: 0.25rem 0.65rem; font-size: 0.75rem; color: var(--rose); border-color: var(--rose);" onclick="window.deleteEwayBill('${ewb.id}')">🗑️ Cancel</button>
+                  <td style="display: flex; gap: 0.25rem; align-items: center; white-space: nowrap;" onclick="event.stopPropagation()">
+                    <button class="btn btn-primary" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.viewEwaySlip('${ewb.id}')">View</button>
+                    <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem;" onclick="window.printEwaySlip('${ewb.id}')">Print</button>
+                    <button class="btn btn-outline" style="padding: 0.15rem 0.4rem; font-size: 0.65rem; color: var(--rose); border-color: var(--rose);" onclick="window.deleteEwayBill('${ewb.id}')">🗑️ Cancel</button>
                   </td>
                 </tr>
               `).join('') : `
